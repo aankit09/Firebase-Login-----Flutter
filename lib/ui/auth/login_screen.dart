@@ -1,6 +1,9 @@
+import 'package:firebase_test/ui/auth/post/post_screen.dart';
 import 'package:firebase_test/ui/auth/signup_screen.dart';
+import 'package:firebase_test/utils/utils.dart';
 import 'package:firebase_test/widgets/round_button.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -10,9 +13,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool loading = false;
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -20,6 +25,30 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
+  }
+
+  void login() {
+    setState(() {
+      loading = true;
+    });
+
+    _auth
+        .signInWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text)
+        .then((value) {
+      Utils().toastMessage(value.user!.email.toString());
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => PostScreen()));
+      setState(() {
+        loading = false;
+      });
+    }).onError((error, stackTrace) {
+      debugPrint(error.toString());
+      Utils().toastMessage(error.toString());
+      setState(() {
+        loading = false;
+      });
+    });
   }
 
   @override
@@ -74,9 +103,12 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 20,
             ),
             RoundButton(
+              loading: loading,
               title: 'Login',
               onTap: () {
-                if (_formKey.currentState!.validate()) {}
+                if (_formKey.currentState!.validate()) {
+                  login();
+                }
               },
             ),
             const SizedBox(
