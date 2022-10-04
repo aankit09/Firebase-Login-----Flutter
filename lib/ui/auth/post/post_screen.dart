@@ -41,7 +41,11 @@ class _PostScreenState extends State<PostScreen> {
           ),
         ],
       ),
-      body: const Center(child: Text('PostScreen')),
+      body: const Center(
+          child: Text(
+        'Logout',
+        style: TextStyle(fontSize: 35),
+      )),
     );
   }
 }
