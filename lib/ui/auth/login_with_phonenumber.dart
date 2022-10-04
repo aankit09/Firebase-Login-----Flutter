@@ -29,7 +29,7 @@ class _LoginWithPhoneNumberState extends State<LoginWithPhoneNumber> {
               height: 100,
             ),
             TextFormField(
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               controller: phoneNumberController,
               decoration: const InputDecoration(hintText: '+0 123 456 789'),
             ),
